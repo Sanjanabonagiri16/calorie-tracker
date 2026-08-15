@@ -1,0 +1,25 @@
+# Render Web Service config for the API backend.
+# Dashboard settings should still match if you don't use Blueprint.
+services:
+  - type: web
+    name: nourish-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: pnpm install && pnpm exec prisma db push && pnpm build
+    startCommand: pnpm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        value: file:./prod.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OPENROUTER_MODEL
+        value: openai/gpt-4o-mini
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: APP_URL
+        sync: false
