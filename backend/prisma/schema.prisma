@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  goals        Goal[]
+  foodEntries  FoodEntry[]
+  chatMessages ChatMessage[]
+}
+
+model Goal {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyCalories   Float
+  proteinGrams    Float
+  carbsGrams      Float
+  fatGrams        Float
+  weightGoalKg    Float?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId, isActive])
+}
+
+model FoodEntry {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealType      String
+  name          String
+  quantity      Float    @default(1)
+  unit          String   @default("serving")
+  calories      Float
+  protein       Float    @default(0)
+  carbs         Float    @default(0)
+  fat           Float    @default(0)
+  fiber         Float    @default(0)
+  sugar         Float    @default(0)
+  sodium        Float    @default(0)
+  vitaminA      Float    @default(0)
+  vitaminC      Float    @default(0)
+  calcium       Float    @default(0)
+  iron          Float    @default(0)
+  eatenAt       DateTime @default(now())
+  source        String   @default("manual")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId, eatenAt])
+  @@index([userId, mealType])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}

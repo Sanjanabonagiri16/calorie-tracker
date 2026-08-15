@@ -1,0 +1,560 @@
+@import "tailwindcss";
+
+:root {
+  /*
+   * Palette sampled directly from the reference layout: pale cream page,
+   * soft sage panels, deep olive actions, with lime and tomato accents.
+   */
+  --bg: #feffef;
+  --bg-deep: #eef3d5;
+  --sage: #cedfcd;
+  --sage-soft: #ebefd6;
+  --ink: #2b3520;
+  --ink-soft: #556141;
+  --ink-faint: #8a9578;
+  --leaf: #4b642a;
+  --leaf-bright: #7d9a4f;
+  --leaf-deep: #35491c;
+  --leaf-glow: rgba(125, 154, 79, 0.24);
+  --lime: #9bb84c;
+  --citrus: #dda32b;
+  --coral: #a52121;
+  --berry: #7a6ba8;
+  --cream: #feffef;
+
+  /* Tinted surfaces so components never hardcode raw rgba values. */
+  --leaf-tint: rgba(75, 100, 42, 0.12);
+  --leaf-tint-soft: rgba(75, 100, 42, 0.07);
+  --leaf-tint-strong: rgba(75, 100, 42, 0.18);
+  --citrus-tint: rgba(221, 163, 43, 0.15);
+  --citrus-line: rgba(221, 163, 43, 0.34);
+  --coral-tint: rgba(165, 33, 33, 0.1);
+  --coral-line: rgba(165, 33, 33, 0.24);
+  --ink-tint: rgba(43, 53, 32, 0.06);
+  --ink-tint-strong: rgba(43, 53, 32, 0.09);
+
+  --line: rgba(43, 53, 32, 0.11);
+  --line-strong: rgba(43, 53, 32, 0.18);
+  --shadow-sm: 0 4px 16px rgba(43, 53, 32, 0.05);
+  --shadow: 0 24px 60px rgba(43, 53, 32, 0.09);
+  --shadow-lg: 0 32px 80px rgba(43, 53, 32, 0.14);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-ink: var(--ink);
+  --color-leaf: var(--leaf);
+  --color-citrus: var(--citrus);
+  --color-coral: var(--coral);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-dm-sans);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(1100px 620px at 8% -12%, rgba(155, 184, 76, 0.2), transparent 58%),
+    radial-gradient(900px 520px at 100% 2%, rgba(221, 163, 43, 0.14), transparent 52%),
+    linear-gradient(180deg, var(--bg) 0%, var(--sage-soft) 58%, var(--sage) 100%);
+  background-attachment: fixed;
+  font-family: var(--font-dm-sans), "Segoe UI", sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(155, 184, 76, 0.34);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(43, 53, 32, 0.2);
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(43, 53, 32, 0.32);
+  background-clip: content-box;
+}
+
+.glass {
+  position: relative;
+  background: rgba(254, 255, 239, 0.9);
+  backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+/* Soft highlight along the top edge gives panels a lifted, glassy feel */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0) 45%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card-hover {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  letter-spacing: -0.03em;
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--leaf) 0%, var(--leaf-bright) 45%, var(--citrus) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.input {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 0.75rem 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--ink-faint);
+}
+
+.input:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.input:focus {
+  border-color: var(--leaf-bright);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 4px var(--leaf-glow);
+}
+
+/* Must follow .input: the shorthand padding above would otherwise win the cascade. */
+.input-icon {
+  padding-left: 2.9rem;
+}
+
+.input-action {
+  padding-right: 3.25rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    filter 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--leaf-deep) 0%, var(--leaf) 55%, var(--leaf-bright) 100%);
+  color: var(--cream);
+  box-shadow: 0 10px 24px rgba(53, 73, 28, 0.24);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 16px 34px rgba(53, 73, 28, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--line-strong);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-soft);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--ink-tint);
+  color: var(--ink);
+}
+
+.btn-cream {
+  background: var(--cream);
+  color: var(--leaf);
+  box-shadow: none;
+}
+
+.btn-cream:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.btn-ghost-light:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--cream);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-tint);
+  border-radius: 14px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -30px, 0) scale(1.08);
+  }
+}
+
+.aurora {
+  position: fixed;
+  border-radius: 999px;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: float-slow 14s ease-in-out infinite;
+}
+
+/*
+ * Blurred produce photo behind the app. Split across two pseudo-elements so the
+ * cream scrim stays sharp: a filter on the parent would blur the scrim too.
+ */
+.food-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.food-bg::before {
+  content: "";
+  position: absolute;
+  /* Bleed past the viewport so the blur doesn't fade in at the edges. */
+  inset: -60px;
+  background: url("/images/nutrition-bg.jpg") center / cover no-repeat;
+  filter: blur(18px) saturate(115%);
+  opacity: 0.62;
+}
+
+/*
+ * Deep olive surface with the food photo showing through, shared by the login
+ * hero and the app header so both read as the same material. Children need
+ * `relative z-10` to sit above the photo layer.
+ */
+.hero-surface {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(150deg, #4b642a 0%, #35491c 55%, #1e2a10 100%);
+  color: var(--cream);
+}
+
+.hero-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/images/nutrition-bg.jpg") center / cover no-repeat;
+  opacity: 0.26;
+  pointer-events: none;
+}
+
+/* Header sits over scrolling content, so it needs a denser photo-free base. */
+.hero-surface--bar::before {
+  opacity: 0.22;
+  background-position: center 38%;
+}
+
+.hero-surface--bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0) 55%
+  );
+  pointer-events: none;
+}
+
+/* Cream wash keeps body copy and charts readable over the photo. */
+.food-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(254, 255, 239, 0.5) 0%,
+    rgba(235, 239, 214, 0.68) 45%,
+    rgba(206, 223, 205, 0.8) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora,
+  .skeleton::after,
+  .scan-pulse {
+    animation: none;
+  }
+}
+
+/* Compact horizontal macro strip used under scan results and meal cards. */
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .metric-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.metric-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  border-radius: 16px;
+  padding: 0.7rem 0.8rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--line);
+}
+
+.metric-chip strong {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.metric-chip span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Camera-style stage with glowing corner brackets. */
+.scan-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background: rgba(20, 30, 10, 0.88);
+  min-height: 280px;
+}
+
+.scan-stage__frame {
+  position: absolute;
+  inset: 18px;
+  pointer-events: none;
+  border-radius: 18px;
+}
+
+.scan-stage__frame > span {
+  position: absolute;
+  inset: 0;
+}
+
+.scan-stage__frame::before,
+.scan-stage__frame::after,
+.scan-stage__frame span::before,
+.scan-stage__frame span::after {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: #cbe09a;
+  border-style: solid;
+  border-width: 0;
+}
+
+.scan-stage__frame::before {
+  top: 0;
+  left: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-top-left-radius: 10px;
+}
+
+.scan-stage__frame::after {
+  top: 0;
+  right: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+  border-top-right-radius: 10px;
+}
+
+.scan-stage__frame span::before {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+  border-bottom-left-radius: 10px;
+}
+
+.scan-stage__frame span::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-bottom-right-radius: 10px;
+}
+
+.scan-pulse {
+  position: absolute;
+  inset: 24%;
+  border-radius: 999px;
+  border: 1px solid rgba(203, 224, 154, 0.55);
+  animation: scan-breathe 1.8s ease-in-out infinite;
+}
+
+@keyframes scan-breathe {
+  0%,
+  100% {
+    transform: scale(0.92);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+  }
+}
+
+.diary-item {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  border-radius: 22px;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.diary-item:hover {
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.composer-bar {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.45rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.composer-bar .input {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 999px;
+}
+
+.composer-bar .input:focus {
+  box-shadow: none;
+}
