@@ -1,6 +1,10 @@
 # Spec file — keep local only
 development.mdc
 
+# Local screen recordings (use compressed docs/demo instead)
+*.mov
+Screen Recording*
+
 # dependencies
 node_modules/
 .pnp
