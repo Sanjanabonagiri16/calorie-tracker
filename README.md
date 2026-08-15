@@ -2,9 +2,12 @@
 
 Nourish helps you log meals, set daily calorie and macro goals, and see nutrition trends over time. The frontend and API are separate Next.js apps that talk only over HTTP.
 
-**Live demo**
-- App: [https://nourish-calorie.netlify.app](https://nourish-calorie.netlify.app)
-- API: [https://calorie-tracker-czhw.onrender.com](https://calorie-tracker-czhw.onrender.com)
+## Live links
+
+| | URL |
+|---|---|
+| **Frontend** | [https://nourish-calorie.netlify.app](https://nourish-calorie.netlify.app) |
+| **Backend API** | [https://calorie-tracker-czhw.onrender.com](https://calorie-tracker-czhw.onrender.com) |
 
 ## Demo walkthrough
 
